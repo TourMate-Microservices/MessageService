@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourMate.MessageService.Api", "TourMate.MessageService.Api\TourMate.MessageService.Api.csproj", "{1ED9ED3F-4756-43CB-A38A-D13DCDD39E22}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1ED9ED3F-4756-43CB-A38A-D13DCDD39E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED9ED3F-4756-43CB-A38A-D13DCDD39E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED9ED3F-4756-43CB-A38A-D13DCDD39E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED9ED3F-4756-43CB-A38A-D13DCDD39E22}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D6D67B5-25EE-4C86-9C6C-B542A535F89B}
+	EndGlobalSection
+EndGlobal
