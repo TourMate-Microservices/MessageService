@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package userservice;
+
+option csharp_namespace = "TourMate.MessageService.Services.Grpc";
+
+service UserService {
+  rpc GetBasicUserInfo (UserIdRequest) returns (UserInfoResponse);
+  rpc GetSenderRole (SenderIdRequest) returns (SenderRoleResponse);
+}
+
+
+message UserIdRequest {
+  int32 userId = 1;
+}
+
+message UserInfoResponse {
+  UserInfo user = 1;
+}
+
+message UserInfo {
+  int32 accountId = 1;
+  string fullName = 2;
+  string image = 3;
+  int32 roleId = 4;
+}
+
+message SenderIdRequest {
+	  int32 senderId = 1;
+}
+
+message SenderRoleResponse {
+  int32 senderId = 1;
+  int32 roleId = 2;
+}
+
