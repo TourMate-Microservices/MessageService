@@ -11,48 +11,20 @@ using TourMate.SignalRHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.WebHost.UseUrls("http://0.0.0.0:5001");
 
-// Đăng ký CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactApp", builder =>
-    {
-        builder.WithOrigins(
-            "http://localhost:3000"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-    });
-});
-
+// Register services
 builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "MessageService API",
-        Version = "v1"
-    });
-
-    // Thêm dòng này để Swagger hiểu base URL là /user-service
-    c.AddServer(new OpenApiServer
-    {
-        Url = "/message-service"
-    });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessageService API", Version = "v1" });
+    c.AddServer(new OpenApiServer { Url = "/message-service" });
 });
 
-
-
-
-
+// Repository & service DI
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
@@ -60,16 +32,11 @@ builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IMessagesService, MessagesService>();
+builder.Services.AddScoped<IUserServiceGrpcClient, UserServiceGrpcClient>();
 
-
-// Đăng ký DbContext
 builder.Services.AddDbContext<TourMateMessageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add gRPC client
-builder.Services.AddScoped<IUserServiceGrpcClient, UserServiceGrpcClient>();
-
-// Add gRPC server and UserGrpcService
 builder.Services.AddGrpc();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -84,10 +51,34 @@ app.UsePathBase("/message-service");
 
 app.UseRouting();
 
-app.UseCors("AllowReactApp");
+
+// ✅ Middleware xử lý CORS động – hỗ trợ origin tự động và credentials
+app.Use(async (context, next) =>
+{
+    var origin = context.Request.Headers["Origin"].ToString();
+
+    if (!string.IsNullOrEmpty(origin))
+    {
+        context.Response.Headers["Access-Control-Allow-Origin"] = origin;
+        context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+        context.Response.Headers["Access-Control-Allow-Headers"] =
+            "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-signalr-user-agent";
+        context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
+    }
+
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+        return;
+    }
+
+    await next();
+});
 
 
-// Configure the HTTP request pipeline.
+
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
