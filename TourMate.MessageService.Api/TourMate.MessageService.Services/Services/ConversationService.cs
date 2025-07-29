@@ -26,8 +26,9 @@ namespace TourMate.MessageService.Services.Services
             if (conversation != null) return conversation;
 
             var newConv = new Conversation();
+            newConv.CreatedAt = DateTime.UtcNow;
 
-            if(currentRole == 2)
+            if (currentRole == 2)
             {
                 newConv.Account1Id = userId; // TourGuide is Account1
                 newConv.Account2Id = currentUserId; // Customer is Account2
@@ -84,7 +85,7 @@ namespace TourMate.MessageService.Services.Services
             {
                 if (!userInfoMap.ContainsKey(partnerId))
                 {
-                    var info = await _userGrpcClient.GetUserByIdAndRoleAsync(partnerId);
+                    var info = await _userGrpcClient.GetBasicUserInfoAsync(partnerId);
                     if (info != null)
                     {
                         userInfoMap[partnerId] = info;

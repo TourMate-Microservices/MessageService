@@ -84,6 +84,9 @@ app.UsePathBase("/message-service");
 
 app.UseRouting();
 
+app.UseCors("AllowReactApp");
+
+
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(c =>

@@ -6,8 +6,7 @@ using TourMate.MessageService.Services.IServices;
 
 namespace TourMate.MessageService.Api.Controllers
 {
-    [Authorize]
-    [Route("api/conversations")]
+    [Route("api/v1/conversations")]
     [ApiController]
     public class ConversationController : ControllerBase
     {
@@ -36,10 +35,10 @@ namespace TourMate.MessageService.Api.Controllers
             string account2Img = "";
             if (currentRole == 2)
             {
-                var customer = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(currentUserId);
+                var customer = await _userServiceGrpcClient.GetBasicUserInfoAsync(currentUserId);
                 accountName1 = customer.FullName;
                 account1Img = customer.Image;
-                var tourGuide = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(otherUserId); // Lấy thông tin TourGuide
+                var tourGuide = await _userServiceGrpcClient.GetBasicUserInfoAsync(otherUserId); // Lấy thông tin TourGuide
                 if (tourGuide != null)
                 {
                     accountName2 = tourGuide.FullName;
@@ -49,10 +48,10 @@ namespace TourMate.MessageService.Api.Controllers
 
             else if (currentRole == 3)
             {
-                var tourGuide = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(currentUserId);
+                var tourGuide = await _userServiceGrpcClient.GetBasicUserInfoAsync(currentUserId);
                 accountName1 = tourGuide.FullName;
                 account1Img = tourGuide.Image;
-                var customer = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(otherUserId); // Lấy thông tin Customer
+                var customer = await _userServiceGrpcClient.GetBasicUserInfoAsync(otherUserId); // Lấy thông tin Customer
                 if (customer != null)
                 {
                     accountName2 = customer.FullName;
@@ -121,14 +120,14 @@ namespace TourMate.MessageService.Api.Controllers
                 {
                     if (sender.RoleId == 2)
                     {
-                        var customer = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(message.SenderId);
+                        var customer = await _userServiceGrpcClient.GetBasicUserInfoAsync(message.SenderId);
                         if (customer != null)
                             senderName = customer.FullName;
                         senderAvatarUrl = customer.Image;
                     }
                     else if (sender.RoleId == 3)
                     {
-                        var tourGuide = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(message.SenderId);
+                        var tourGuide = await _userServiceGrpcClient.GetBasicUserInfoAsync(message.SenderId);
                         if (tourGuide != null)
                             senderName = tourGuide.FullName;
                         senderAvatarUrl = tourGuide.Image;

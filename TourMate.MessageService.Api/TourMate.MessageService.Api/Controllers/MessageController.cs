@@ -6,8 +6,7 @@ using TourMate.MessageService.Repositories.RequestModels;
 
 namespace TourMate.MessageService.Api.Controllers
 {
-    [Authorize]
-    [Route("api/messages")]
+    [Route("api/v1/messages")]
     [ApiController]
     public class MessageController : ControllerBase
     {

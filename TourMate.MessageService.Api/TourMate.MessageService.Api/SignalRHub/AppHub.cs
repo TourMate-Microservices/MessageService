@@ -200,14 +200,15 @@ namespace TourMate.SignalRHub
                 SendAt = DateTime.UtcNow,
                 IsRead = false,
                 IsDeleted = false,
-                IsEdited = false
+                IsEdited = false,
+                MessageTypeId = 1 // Assuming 1 is the ID for text messages
             };
 
             var result = await _messageService.CreateMessages(message);
             if (result == null) return null;
 
             // Gọi 1 lần duy nhất
-            var account = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(senderId);
+            var account = await _userServiceGrpcClient.GetBasicUserInfoAsync(senderId);
 
             var name = "User";
             var avatar = "";
@@ -257,7 +258,7 @@ namespace TourMate.SignalRHub
             var result = await _messageService.CreateMessages(message);
             if (result == null) return null;
 
-            var account = await _userServiceGrpcClient.GetUserByIdAndRoleAsync(senderId);
+            var account = await _userServiceGrpcClient.GetBasicUserInfoAsync(senderId);
             var name = "Người dùng";
             var avatar = "";
 

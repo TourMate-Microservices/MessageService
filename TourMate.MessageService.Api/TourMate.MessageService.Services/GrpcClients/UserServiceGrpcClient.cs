@@ -14,7 +14,7 @@ namespace TourMate.MessageService.Services.GrpcClients
 {
     public interface IUserServiceGrpcClient
     {
-        Task<UserInfo?> GetUserByIdAndRoleAsync(int userId);
+        Task<UserInfo?> GetBasicUserInfoAsync(int userId);
         Task<SenderRoleResponse> GetSenderRoleAsync(int userId);
     }
     public class UserServiceGrpcClient : IUserServiceGrpcClient    {
@@ -62,25 +62,36 @@ namespace TourMate.MessageService.Services.GrpcClients
         }
 
 
-        public async Task<UserInfo?> GetUserByIdAndRoleAsync(int userId)
+        public async Task<UserInfo?> GetBasicUserInfoAsync(int userId)
         {
             try
             {
+                _logger.LogInformation("=== MessageService calling GetBasicUserInfoAsync === userId: {UserId}, StackTrace: {StackTrace}", 
+                    userId, Environment.StackTrace.Split('\n').Take(5).ToArray());
+                
                 var request = new UserIdRequest
                 {
                     UserId = userId,
                 };
 
+                _logger.LogInformation("Making gRPC call to UserService.GetBasicUserInfoAsync");
                 var response = await _client.GetBasicUserInfoAsync(request);
-
+                
+                _logger.LogInformation("=== Successfully received response from UserService === AccountId: {AccountId}, FullName: '{FullName}', RoleId: {RoleId}", 
+                    response.User.AccountId, response.User.FullName, response.User.RoleId);
                 return response.User;
             }
             catch (RpcException ex)
             {
-                _logger.LogError(ex, "gRPC error in GetUserByIdAndRoleAsync");
+                _logger.LogError(ex, "gRPC error in GetBasicUserInfoAsync for userId: {UserId}. Status: {Status}, Detail: {Detail}", 
+                    userId, ex.Status.StatusCode, ex.Status.Detail);
                 return null;
             }
-
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error in GetBasicUserInfoAsync for userId: {UserId}", userId);
+                return null;
+            }
         }
 
         public void Dispose()

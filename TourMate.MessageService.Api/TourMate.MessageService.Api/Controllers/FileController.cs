@@ -7,8 +7,7 @@ using TourMate.MessageService.Repositories.RequestModels;
 
 namespace TourMate.MessageService.Api.Controllers
 {
-    [Authorize]
-    [Route("api/files")]
+    [Route("api/v1/files")]
     [ApiController]
     public class FileController : ControllerBase
     {
