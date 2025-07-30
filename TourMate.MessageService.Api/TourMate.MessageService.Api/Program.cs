@@ -51,7 +51,6 @@ app.UsePathBase("/message-service");
 
 app.UseRouting();
 
-
 // ✅ Middleware xử lý CORS động – hỗ trợ origin tự động và credentials
 app.Use(async (context, next) =>
 {
@@ -62,7 +61,7 @@ app.Use(async (context, next) =>
         context.Response.Headers["Access-Control-Allow-Origin"] = origin;
         context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
         context.Response.Headers["Access-Control-Allow-Headers"] =
-            "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-signalr-user-agent";
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-signalr-user-agent, ngrok-skip-browser-warning";
         context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
     }
 
